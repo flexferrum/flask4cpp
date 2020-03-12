@@ -1,0 +1,26 @@
+name: CI
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v1
+    - name: Setup environment
+      run: |
+        sudo apt-get install -y cmake build-essential
+    - name: Setup conan
+      run: |
+        sudo pip install --upgrade pip
+        sudo pip install conan
+        conan remote add martin https://api.bintray.com/conan/martinmoene/nonstd-lite
+        conan remote add bincrafters https://api.bintray.com/conan/bincrafters/public-conan
+        conan remote add flexferrum https://api.bintray.com/conan/flexferrum/conan-packages
+    - name: Build
+      run: |
+        mkdir .build && cd .build
+        cmake -DCMAKE_BUILD_TYPE=Release ..
+        cmake --build .
