@@ -6,6 +6,8 @@ if (NOT FLASK4CPP_EXT_CONAN)
 
     if (FLASK4CPP_CONAN_PROFILE STREQUAL "default")
         set (FLASK4CPP_CONAN_SETTINGS compiler.cppstd=14)
+    else ()
+        set (FLASK4CPP_CONAN_PROFILE_PARAM "PROFILE ${FLASK4CPP_CONAN_PROFILE}")
     endif ()
 
     conan_cmake_run(
@@ -16,7 +18,7 @@ if (NOT FLASK4CPP_EXT_CONAN)
             nlohmann_json/[>=3.7.0]
             BASIC_SETUP
             SETTINGS ${FLASK4CPP_CONAN_SETTINGS} build_type=${CMAKE_BUILD_TYPE}
-            PROFILE ${FLASK4CPP_CONAN_PROFILE}
+            ${FLASK4CPP_CONAN_PROFILE_PARAM}
             BUILD missing
             GENERATORS cmake cmake_find_package
     )
