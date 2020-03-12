@@ -18,6 +18,7 @@ if (NOT FLASK4CPP_EXT_CONAN)
             SETTINGS ${FLASK4CPP_CONAN_SETTINGS} build_type=${CMAKE_BUILD_TYPE}
             PROFILE ${FLASK4CPP_CONAN_PROFILE}
             BUILD missing
+            GENERATORS cmake cmake_find_package
     )
 else ()
     include (${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
