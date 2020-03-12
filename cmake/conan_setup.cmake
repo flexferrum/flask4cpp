@@ -1,13 +1,17 @@
 if (NOT FLASK4CPP_EXT_CONAN)
-    include (cmake/conan.cmake)
+    include(cmake/conan.cmake)
     if (NOT MSVC)
-        set (FLASK4CPP_CONAN_SETTINGS compiler.libcxx=libstdc++11)
+        set(FLASK4CPP_CONAN_SETTINGS compiler.libcxx=libstdc++11)
     endif ()
 
-    if (FLASK4CPP_CONAN_PROFILE STREQUAL "default")
-        set (FLASK4CPP_CONAN_SETTINGS compiler.cppstd=14)
+    if (FLASK4CPP_CONAN_PROFILE STREQUAL "auto")
+        set(FLASK4CPP_CONAN_SETTINGS compiler.cppstd=14)
     else ()
-        set (FLASK4CPP_CONAN_PROFILE_PARAM "PROFILE ${FLASK4CPP_CONAN_PROFILE}")
+        set(FLASK4CPP_CONAN_PROFILE_PARAM "PROFILE ${FLASK4CPP_CONAN_PROFILE}")
+    endif ()
+
+    if (FLASK4CPP_ENABLE_SSL)
+        set(OPENSSL_LIB_REF openssl/1.1.1d)
     endif ()
 
     conan_cmake_run(
@@ -16,6 +20,7 @@ if (NOT FLASK4CPP_EXT_CONAN)
             gtest/[>=1.10.0]
             boost/[>=1.72.0]
             nlohmann_json/[>=3.7.0]
+            ${OPENSSL_LIB_REF}
             BASIC_SETUP
             SETTINGS ${FLASK4CPP_CONAN_SETTINGS} build_type=${CMAKE_BUILD_TYPE}
             ${FLASK4CPP_CONAN_PROFILE_PARAM}

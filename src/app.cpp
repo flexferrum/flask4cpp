@@ -1,0 +1,23 @@
+//
+// Created by flexf on 12.03.2020.
+//
+
+#include "app_impl.h"
+
+#include <flask4cpp/app.h>
+
+namespace flask4cpp
+{
+
+App::App(AppSettings* settings)
+    : m_impl(new AppImpl(settings))
+{
+}
+App::~App() = default;
+
+int App::Run()
+{
+    return m_impl->Run();
+}
+
+} // flask4cpp
