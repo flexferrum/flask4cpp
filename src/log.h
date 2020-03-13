@@ -12,12 +12,12 @@ namespace flask4cpp
 {
 #define TO_LOG(L, LV) BOOST_LOG_SEV((L), boost::log::trivial::LV)
 
-#define LOG_TRACE() TO_LOG(log(), trace)
+#define LOG_TRACE() TO_LOG((*log()), trace)
 #define LOG_DEBUG() TO_LOG((*log()), debug)
-#define LOG_INFO() TO_LOG(log(), info)
-#define LOG_WARNING() TO_LOG(log(), warning)
-#define LOG_ERROR() TO_LOG(log(), error)
-#define LOG_FATAL() TO_LOG(log(), fatal)
+#define LOG_INFO() TO_LOG((*log()), info)
+#define LOG_WARNING() TO_LOG((*log()), warning)
+#define LOG_ERROR() TO_LOG((*log()), error)
+#define LOG_FATAL() TO_LOG((*log()), fatal)
 } // namespace flask4cpp
 
 #endif // FLASK4CPP_LOG_H

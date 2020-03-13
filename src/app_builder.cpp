@@ -8,8 +8,11 @@
 #include <flask4cpp/app_builder.h>
 #include <fmt/format.h>
 
+#include <boost/algorithm/string/predicate.hpp>
 #include <boost/log/utility/setup/console.hpp>
 #include <boost/log/utility/setup/filter_parser.hpp>
+
+#include <unordered_set>
 
 namespace flask4cpp
 {
@@ -110,8 +113,14 @@ auto InitializeLogger(const LogSettings& setts)
 
 struct EndpointAddressBuilder
 {
-    std::string operator()(const ListenerParams& l) const { return fmt::format("http://{}:{}", l.address, l.port); }
-    std::string operator()(const SSLListenerParams& l) const { return fmt::format("https://{}:{}", l.address, l.port); }
+    std::pair<std::string, std::string> operator()(const ListenerParams& l) const
+    {
+        return std::make_pair(l.name, fmt::format("http://{}:{}", l.address, l.port));
+    }
+    std::pair<std::string, std::string> operator()(const SSLListenerParams& l) const
+    {
+        return std::make_pair(l.name, fmt::format("https://{}:{}", l.address, l.port));
+    }
 };
 } // namespace
 
@@ -124,10 +133,30 @@ nonstd::expected<App, AppBuilder::BuildErrors> AppBuilder::CreateApp()
 
     auto log = [this] { return m_settings->logger.get(); };
     LOG_DEBUG() << "Start verifying configuration";
+    std::unordered_set<std::string> endpoints;
     for (auto& l : m_settings->listeners)
     {
-        auto endpoint = nonstd::visit(EndpointAddressBuilder(), l);
+#if __cplusplus >= 201703L
+        const auto& [endpoint_name, endpoint] = nonstd::visit(EndpointAddressBuilder(), l);
+#else
+        auto endpoint_info = nonstd::visit(EndpointAddressBuilder(), l);
+        auto& endpoint_name = endpoint_info.first;
+        auto& endpoint = endpoint_info.second;
+#endif
         LOG_DEBUG() << "Found endpoint: " << endpoint;
+        if (endpoints.count(endpoint))
+        {
+            LOG_FATAL() << "Duplicate listener bindings to: " << endpoint << ". Second binding is: " << endpoint_name;
+            return nonstd::make_unexpected(BuildErrors::ConfigurationError);
+        }
+#ifndef FLASK4CPP_SSL_ENABLED
+        if (boost::algorithm::starts_with(endpoint, "https://") || boost::algorithm::starts_with(endpoint, "wss://"))
+        {
+            LOG_FATAL() << "Unsupported protocol for endpoint: " << endpoint;
+            return nonstd::make_unexpected(BuildErrors::NoSSLSupport);
+        }
+#endif
+        endpoints.insert(endpoint);
     }
     return App(m_settings.release());
 }

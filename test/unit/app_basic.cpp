@@ -32,3 +32,13 @@ TEST(AppBasic, Create_Failed)
     EXPECT_FALSE(app.has_value());
     EXPECT_EQ(flask4cpp::AppBuilder::BuildErrors::NotInitialized, app.error());
 }
+
+TEST(AppBasic, DoubleEndpointsCreate_Failed)
+{
+    flask4cpp::AppBuilder builder;
+
+    builder.ListenOn("default", "127.0.0.1", 80);
+    builder.ListenOn("non_default", "127.0.0.1", 80);
+    auto app = builder.CreateApp();
+    EXPECT_EQ(flask4cpp::AppBuilder::BuildErrors::ConfigurationError, app.error());
+}

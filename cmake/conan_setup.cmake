@@ -5,7 +5,7 @@ if (NOT FLASK4CPP_EXT_CONAN)
     endif ()
 
     if (FLASK4CPP_CONAN_PROFILE STREQUAL "auto")
-        set(FLASK4CPP_CONAN_SETTINGS compiler.cppstd=14)
+#        set(FLASK4CPP_CONAN_SETTINGS compiler.cppstd=14)
     else ()
         set(FLASK4CPP_CONAN_PROFILE_PARAM "PROFILE ${FLASK4CPP_CONAN_PROFILE}")
     endif ()
