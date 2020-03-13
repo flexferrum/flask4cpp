@@ -58,6 +58,7 @@ set_property(TARGET ${LIB_TARGET_NAME} PROPERTY PUBLIC_HEADER ${PublicHeaders})
 target_link_libraries(
         ${LIB_TARGET_NAME}
         PUBLIC jinja2cpp::jinja2cpp nlohmann_json::nlohmann_json
+        PRIVATE fmt::fmt
 )
 
 if (FLASK4CPP_ENABLE_SSL)

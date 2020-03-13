@@ -22,10 +22,21 @@ public:
     AppBuilder();
     ~AppBuilder();
 
-    enum class BuildErrors {
+    enum class BuildErrors
+    {
         NotInitialized,
         ConfigurationError,
         NoSSLSupport,
+    };
+
+    enum class LogLevel
+    {
+        Trace,
+        Debug,
+        Info,
+        Warning,
+        Error,
+        Fatal
     };
 
     AppBuilder& ConfigureDefault();
@@ -35,6 +46,8 @@ public:
                             uint16_t port,
                             const nonstd::string_view& certPath,
                             const nonstd::string_view& keyPath);
+
+    AppBuilder& SetLogLevel(LogLevel level);
 
     nonstd::expected<App, BuildErrors> CreateApp();
 

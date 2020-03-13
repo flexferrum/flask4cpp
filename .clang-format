@@ -11,6 +11,7 @@ BraceWrapping:
   BeforeCatch: true
   BeforeElse: true
   AfterStruct: true
+  AfterEnum: true
 AccessModifierOffset: -4
 BinPackParameters: false
 AlwaysBreakAfterReturnType: None
@@ -18,6 +19,7 @@ AlwaysBreakAfterDefinitionReturnType: None
 AllowAllParametersOfDeclarationOnNextLine: false
 ConstructorInitializerIndentWidth: 4
 NamespaceIndentation: None
+FixNamespaceComments: true
 PointerAlignment: Left
 Standard: Cpp11
 UseTab: Never
@@ -25,7 +27,7 @@ AlignAfterOpenBracket: Align
 PenaltyReturnTypeOnItsOwnLine: 0
 IncludeBlocks: Regroup
 IncludeCategories:
-  - Regex:           '^((<|")(shared)\/)'
+  - Regex:           '^((<|")(boost)\/)'
     Priority:        4
   - Regex:           '^((<|")(components)\/)'
     Priority:        3
