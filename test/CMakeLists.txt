@@ -25,5 +25,6 @@ macro(AddTestTarget SubDir)
 endmacro()
 
 add_executable(flask4cpp_basic basic/main.cpp)
+target_link_libraries(flask4cpp_basic ${LIB_TARGET_NAME} GTest::GTest)
 
 AddTestTarget(unit)
