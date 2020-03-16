@@ -10,6 +10,8 @@
 
 namespace flask4cpp
 {
+using LoggerType = boost::log::sources::severity_logger_mt<boost::log::trivial::severity_level>;
+
 #define TO_LOG(L, LV) BOOST_LOG_SEV((L), boost::log::trivial::LV)
 
 #define LOG_TRACE() TO_LOG((*log()), trace)

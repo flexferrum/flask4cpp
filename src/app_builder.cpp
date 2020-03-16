@@ -97,11 +97,19 @@ AppBuilder& AppBuilder::SetLogLevel(AppBuilder::LogLevel level)
     return *this;
 }
 
+AppBuilder& AppBuilder::SetNumThreads(uint16_t count)
+{
+    EnsureSettingsCreated();
+    m_settings->threadNum = count;
+
+    return *this;
+}
+
 namespace
 {
 auto InitializeLogger(const LogSettings& setts)
 {
-    auto log = std::make_unique<AppSettings::LoggerType>();
+    auto log = std::make_unique<LoggerType>();
     if (!setts.enableConsole)
     {
         auto console = boost::log::add_console_log();
@@ -172,5 +180,4 @@ void AppBuilder::EnsureSettingsCreated()
 #endif
     }
 }
-
 } // namespace flask4cpp

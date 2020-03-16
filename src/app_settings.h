@@ -11,6 +11,8 @@
 #undef BOOST_LOG_NO_THREADS
 #endif
 
+#include "log.h"
+
 #include <boost/log/common.hpp>
 #include <boost/log/trivial.hpp>
 // #include <boost/log/sources/severity_logger.hpp>
@@ -22,6 +24,7 @@
 namespace flask4cpp
 {
 
+// HTTP Listener
 struct ListenerParams
 {
     std::string name;
@@ -29,6 +32,7 @@ struct ListenerParams
     uint16_t port;
 };
 
+// HTTPS Listener
 struct SSLListenerParams
 {
     std::string name;
@@ -48,11 +52,10 @@ struct LogSettings
 
 struct AppSettings
 {
-    using LoggerType = boost::log::sources::severity_logger_mt<boost::log::trivial::severity_level>;
-
     std::vector<ListenerInfo> listeners;
     LogSettings logSettings;
     std::unique_ptr<LoggerType> logger;
+    uint16_t threadNum = 8;
 };
 
 } // namespace flask4cpp

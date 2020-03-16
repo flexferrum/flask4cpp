@@ -48,6 +48,7 @@ public:
                             const nonstd::string_view& keyPath);
 
     AppBuilder& SetLogLevel(LogLevel level);
+    AppBuilder& SetNumThreads(uint16_t count);
 
     nonstd::expected<App, BuildErrors> CreateApp();
 

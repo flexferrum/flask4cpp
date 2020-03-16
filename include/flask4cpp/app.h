@@ -18,6 +18,8 @@ public:
     ~App();
 
     int Run();
+    int Start(bool wait = false);
+    int Shutdown();
 
 private:
     friend class AppBuilder;

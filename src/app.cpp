@@ -20,4 +20,13 @@ int App::Run()
     return m_impl->Run();
 }
 
+int App::Start(bool wait)
+{
+    return m_impl->Start(wait);
+}
+int App::Shutdown()
+{
+    return m_impl->Shutdown();
+}
+
 } // flask4cpp
