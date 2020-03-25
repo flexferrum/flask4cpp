@@ -24,7 +24,7 @@ TEST(AppBasic, SimpleCreate_Successfull)
     EXPECT_TRUE(app.has_value());
 }
 
-TEST(AppBasic, Create_Failed)
+TEST(AppBasic, CreateNoConfig_Failed)
 {
     flask4cpp::AppBuilder builder;
 

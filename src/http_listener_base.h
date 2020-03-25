@@ -9,7 +9,7 @@
 
 namespace flask4cpp
 {
-class HttpListenerBase
+class HttpListenerBase : public std::enable_shared_from_this<HttpListenerBase>
 {
 public:
     HttpListenerBase(LoggerType* logger)
@@ -28,9 +28,9 @@ public:
 
     virtual bool IsOpen() const = 0;
 
-protected:
-    auto log() { return m_logger; };
+    LoggerType* log() { return m_logger; };
 
+protected:
     virtual void DoAccept() = 0;
 
 private:

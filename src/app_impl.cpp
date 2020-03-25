@@ -56,27 +56,55 @@ int AppImpl::Start(bool wait)
     m_currentState = State::Starting;
     m_ioContext = std::make_unique<boost::asio::io_context>(m_settings->threadNum);
 
+    LOG_DEBUG() << "Start creating listeners";
     for (auto& l : m_settings->listeners)
     {
+        LOG_DEBUG() << ">>>>>>>>> 1";
         auto listener = nonstd::visit(ListenerCreator(log(), m_ioContext.get()), l);
+        LOG_DEBUG() << ">>>>>>>>> 2";
         if (!listener)
             continue;
 
+        LOG_DEBUG() << ">>>>>>>>> 3";
         if (!listener->IsOpen())
             return -1;
 
+        LOG_DEBUG() << ">>>>>>>>> 4";
         m_listeners.push_back(listener);
+        LOG_DEBUG() << ">>>>>>>>> 5";
+        listener->run();
+        LOG_DEBUG() << ">>>>>>>>> 6";
     }
+    LOG_DEBUG() << "End creating listeners. " << m_listeners.size() << " created";
 
     auto threads = m_settings->threadNum;
     m_ioThreads.reserve(threads);
+    LOG_DEBUG() << "Start creating IO thread pool threads";
+
+    std::atomic_int started_threads{ 0 };
+
     for (auto i = threads - 1; i >= 0; --i)
-        m_ioThreads.emplace_back([this] { m_ioContext->run(); });
+        m_ioThreads.emplace_back([this, &started_threads] {
+            LOG_DEBUG() << "IO thread started";
+            started_threads++;
+            m_ioContext->run();
+        });
+
+    LOG_DEBUG() << "End creating IO thread pool threads. " << m_ioThreads.size() << " threads created";
+
+    if (wait)
+    {
+        LOG_DEBUG() << "Wait for IO threads started";
+        while (started_threads != threads)
+            ;
+        LOG_DEBUG() << "IO threads actually started";
+    }
 
     m_currentState = State::Started;
 
     return 0;
 }
+
 int AppImpl::Shutdown()
 {
     return 0;
