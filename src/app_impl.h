@@ -17,6 +17,7 @@
 #include <atomic>
 #include <condition_variable>
 #include <memory>
+#include <thread>
 #include <mutex>
 
 namespace flask4cpp
